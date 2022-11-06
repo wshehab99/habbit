@@ -19,7 +19,10 @@ class PageViewBuilder extends StatelessWidget {
         const SizedBox(
           height: 15,
         ),
-        Text(onBoardingModel!.title!)
+        Text(
+          onBoardingModel!.title!,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
       ],
     );
   }
