@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:habbit/layout/widgets/task_search_text_field.dart';
@@ -24,70 +23,75 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
-            Expanded(child: TaskSearchTextField())
+            const Expanded(child: TaskSearchTextField())
           ],
         ),
         titleSpacing: 10,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "My Tasks",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "See all",
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "My Tasks",
                     style: TextStyle(
-                      color: Colors.pink[200],
-                      fontSize: 18,
+                      fontSize: 22,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                )
-              ],
-            ),
-            StaggeredGrid.count(
-              crossAxisCount: 6,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              children: taskType.map((element) {
-                return StaggeredGridTile.count(
-                  crossAxisCellCount: element.crossAxisCellCount!,
-                  mainAxisCellCount: element.mainAxisCellCount!,
-                  child: TaskTypeCardWidget(
-                    taskTypeModel: element,
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      "See all",
+                      style: TextStyle(
+                        color: Colors.pink[200],
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "On Going",
-              style: TextStyle(
-                fontSize: 22,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+                ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              StaggeredGrid.count(
+                crossAxisCount: 6,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                children: taskType.map((element) {
+                  return StaggeredGridTile.count(
+                    crossAxisCellCount: element.crossAxisCellCount!,
+                    mainAxisCellCount: element.mainAxisCellCount!,
+                    child: TaskTypeCardWidget(
+                      taskTypeModel: element,
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text(
+                "On Going",
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
