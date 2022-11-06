@@ -8,6 +8,7 @@ class TaskTypeModel {
   Color? endColor;
   int? crossAxisCellCount;
   int? mainAxisCellCount;
+  int? completedTasks;
   TaskTypeModel({
     this.name,
     this.taskRank,
@@ -16,6 +17,7 @@ class TaskTypeModel {
     this.endColor,
     this.crossAxisCellCount = 3,
     this.mainAxisCellCount,
+    this.completedTasks,
   });
   static List<TaskTypeModel> getTaskTypes() {
     return [
@@ -26,6 +28,7 @@ class TaskTypeModel {
         startColor: Color.fromARGB(255, 253, 147, 70),
         endColor: Color.fromARGB(255, 253, 183, 119),
         mainAxisCellCount: 4,
+        completedTasks: 2,
       ),
       TaskTypeModel(
         name: "Work",
@@ -33,12 +36,14 @@ class TaskTypeModel {
         taskNo: 2,
         startColor: Color.fromARGB(255, 134, 147, 117),
         endColor: Color.fromARGB(255, 189, 212, 231),
+        completedTasks: 2,
         mainAxisCellCount: 3,
       ),
       TaskTypeModel(
         name: "Health",
         taskRank: 3,
         taskNo: 1,
+        completedTasks: 0,
         startColor: Color.fromARGB(255, 100, 125, 238),
         endColor: Color.fromARGB(255, 127, 83, 172),
         mainAxisCellCount: 4,
@@ -50,6 +55,7 @@ class TaskTypeModel {
         startColor: Color.fromARGB(255, 119, 238, 216),
         endColor: Color.fromARGB(255, 158, 171, 212),
         mainAxisCellCount: 3,
+        completedTasks: 0,
       ),
     ];
   }

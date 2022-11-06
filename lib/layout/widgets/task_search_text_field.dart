@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:habbit/layout/screens/search_screen.dart';
 
 class TaskSearchTextField extends StatelessWidget {
-  const TaskSearchTextField({super.key, this.controller});
+  const TaskSearchTextField({
+    super.key,
+    this.controller,
+    this.isSearch = false,
+  });
   final TextEditingController? controller;
+  final bool isSearch;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40,
+      height: isSearch ? 60 : 40,
       child: TextField(
+        readOnly: !isSearch,
+        autofocus: isSearch,
+        onTap: () {
+          if (!isSearch) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchScreen(),
+              ),
+            );
+          }
+        },
         controller: controller,
         decoration: InputDecoration(
             isDense: true,
