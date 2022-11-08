@@ -24,7 +24,7 @@ class TaskTail extends StatelessWidget {
     int colorIndex1 = Random().nextInt(colors.length);
     int colorIndex2 = Random().nextInt(colors.length);
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
@@ -32,14 +32,14 @@ class TaskTail extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(
           taskModel!.name!,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             color: Colors.black87,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(
-          height: 10,
+        const SizedBox(
+          height: 15,
         ),
         Row(
           children: [
@@ -48,50 +48,50 @@ class TaskTail extends StatelessWidget {
               size: 20,
               color: Colors.indigo.shade300,
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Text(
               "${taskModel!.startTime!}, ${taskModel!.date!}",
-              style: TextStyle(
-                fontSize: 14,
+              style: const TextStyle(
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        SizedBox(
-          height: 10,
+        const SizedBox(
+          height: 15,
         ),
         Row(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 5,
               ),
               decoration: BoxDecoration(
                   color: colors[colorIndex1],
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Text(
                 taskModel!.type.toString().split(".")[1],
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 14),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 5,
               ),
               decoration: BoxDecoration(
                   color: colors[colorIndex2],
-                  borderRadius: BorderRadius.circular(8)),
+                  borderRadius: BorderRadius.circular(10)),
               child: Text(
                 taskModel!.status.toString().split(".")[1],
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 14),
               ),
             )
           ],

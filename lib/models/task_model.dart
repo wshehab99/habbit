@@ -55,6 +55,30 @@ class TaskModel {
         status: TaskStatus.waiting,
         type: TaskTypes.school,
       ),
+      TaskModel(
+        name: 'this is task 31',
+        date: 'june 29 2022',
+        startTime: '13:00',
+        endTime: '15:00',
+        status: TaskStatus.waiting,
+        type: TaskTypes.school,
+      ),
+      TaskModel(
+        name: 'this is task 31',
+        date: 'june 29 2022',
+        startTime: '13:00',
+        endTime: '15:00',
+        status: TaskStatus.waiting,
+        type: TaskTypes.school,
+      ),
+      TaskModel(
+        name: 'this is task 31',
+        date: 'june 29 2022',
+        startTime: '13:00',
+        endTime: '15:00',
+        status: TaskStatus.waiting,
+        type: TaskTypes.school,
+      ),
     ];
   }
 }
