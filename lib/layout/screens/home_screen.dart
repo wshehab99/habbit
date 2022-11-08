@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:habbit/layout/widgets/task_search_text_field.dart';
+import 'package:habbit/layout/widgets/task_tail.dart';
 import 'package:habbit/layout/widgets/task_type_card.dart';
+import 'package:habbit/models/task_model.dart';
 import 'package:habbit/models/task_type_model.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final List<TaskTypeModel> taskType = TaskTypeModel.getTaskTypes();
-
+  final List<TaskModel> tasks = TaskModel.getSchoolTasks();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +90,22 @@ class HomeScreen extends StatelessWidget {
                   fontSize: 22,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              ListView.separated(
+                itemCount: tasks.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return TaskTail(
+                    taskModel: tasks[index],
+                  );
+                },
+                separatorBuilder: (context, index) => SizedBox(
+                  height: 10,
                 ),
               ),
             ],

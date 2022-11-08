@@ -39,13 +39,15 @@ class SearchScreen extends StatelessWidget {
             ),
           )),
       body: controller.text.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LottieBuilder.asset("assets/img/search.json"),
-                  Text("Search Tasks here"),
-                ],
+          ? SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LottieBuilder.asset("assets/img/search.json"),
+                    Text("Search Tasks here"),
+                  ],
+                ),
               ),
             )
           : SizedBox(),
