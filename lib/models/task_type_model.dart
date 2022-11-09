@@ -59,4 +59,8 @@ class TaskTypeModel {
       ),
     ];
   }
+
+  static List<String> getTaskNames() {
+    return getTaskTypes().map((e) => e.name!).toList();
+  }
 }
