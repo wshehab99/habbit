@@ -2,10 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
-import 'package:habbit/layout/widgets/coustom_button.dart';
-import 'package:habbit/layout/widgets/drop_down_task_type.dart';
-import 'package:habbit/layout/widgets/task_details_text_field.dart';
-import 'package:habbit/layout/widgets/time_date_widget.dart';
 import 'package:habbit/models/task_model.dart';
 
 class TaskTail extends StatelessWidget {
@@ -38,7 +34,7 @@ class TaskTail extends StatelessWidget {
         onTap: () {
           showModalBottomSheet(
               isScrollControlled: true,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(25),
                 ),
@@ -95,7 +91,7 @@ class TaskTail extends StatelessWidget {
                     color: colors[colorIndex1],
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
-                  taskModel!.type.toString().split(".")[1],
+                  taskModel!.type!,
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
@@ -111,7 +107,7 @@ class TaskTail extends StatelessWidget {
                     color: colors[colorIndex2],
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
-                  taskModel!.status.toString().split(".")[1],
+                  taskModel!.status!,
                   style: const TextStyle(fontSize: 14),
                 ),
               )

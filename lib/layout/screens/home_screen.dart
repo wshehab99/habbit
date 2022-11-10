@@ -1,116 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habbit/cubit/app_cubit.dart';
+import 'package:habbit/cubit/app_states.dart';
+import 'package:habbit/layout/screens/bag_screen.dart';
+import 'package:habbit/layout/screens/calendar_screen.dart';
+import 'package:habbit/layout/screens/dashboard_screen.dart';
+import 'package:habbit/layout/screens/profile_screen.dart';
+import 'package:habbit/layout/widgets/custom_docked_button.dart';
+import 'package:habbit/layout/widgets/hobbit_navigation_bar.dart';
 import 'package:habbit/layout/widgets/task_search_text_field.dart';
-import 'package:habbit/layout/widgets/task_tail.dart';
-import 'package:habbit/layout/widgets/task_type_card.dart';
-import 'package:habbit/models/task_model.dart';
-import 'package:habbit/models/task_type_model.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
-  final List<TaskTypeModel> taskType = TaskTypeModel.getTaskTypes();
-  final List<TaskModel> tasks = TaskModel.getSchoolTasks();
+
+  final List<Widget> screens = [
+    DashBoardScreen(),
+    BagScreen(),
+    CalendarScreen(),
+    ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 55,
-        title: Row(
-          children: [
-            Text(
-              "June 03 2022",
-              style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+    return BlocProvider(
+      create: (context) => AppCubit(),
+      child: BlocBuilder<AppCubit, AppState>(
+        builder: (context, state) {
+          AppCubit cubit = context.read<AppCubit>();
+          return Scaffold(
+            bottomNavigationBar: HobbitNavigationBar(
+              currentIndex: cubit.currentIndex,
+              changeScreen: (value) {
+                cubit.changeCurrentScreen(value);
+              },
             ),
-            const SizedBox(
-              width: 20,
-            ),
-            const Expanded(child: TaskSearchTextField())
-          ],
-        ),
-        titleSpacing: 10,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            appBar: AppBar(
+              toolbarHeight: 55,
+              title: Row(
                 children: [
-                  const Text(
-                    "My Tasks",
+                  Text(
+                    "June 03 2022",
                     style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.black,
+                      color: Colors.grey[500],
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "See all",
-                      style: TextStyle(
-                        color: Colors.pink[200],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  const SizedBox(
+                    width: 20,
                   ),
+                  const Expanded(child: TaskSearchTextField())
                 ],
               ),
-              SizedBox(
-                height: 10,
-              ),
-              StaggeredGrid.count(
-                crossAxisCount: 6,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
-                children: taskType.map((element) {
-                  return StaggeredGridTile.count(
-                    crossAxisCellCount: element.crossAxisCellCount!,
-                    mainAxisCellCount: element.mainAxisCellCount!,
-                    child: TaskTypeCardWidget(
-                      taskTypeModel: element,
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text(
-                "On Going",
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              ListView.separated(
-                itemCount: tasks.length,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return TaskTail(
-                    taskModel: tasks[index],
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 10,
-                ),
-              ),
-            ],
-          ),
-        ),
+              titleSpacing: 10,
+            ),
+            body: screens[cubit.currentIndex],
+            floatingActionButton: CustomDockedButton(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+          );
+        },
       ),
     );
   }
