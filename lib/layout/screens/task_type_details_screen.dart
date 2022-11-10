@@ -9,7 +9,7 @@ import '../widgets/task_details_app_bar.dart';
 class TaskTypeDetailsScreen extends StatelessWidget {
   TaskTypeDetailsScreen({super.key, this.taskTypeModel});
   final TaskTypeModel? taskTypeModel;
-  final List<TaskModel> tasks = TaskModel.getSchoolTasks();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,22 +22,22 @@ class TaskTypeDetailsScreen extends StatelessWidget {
             ),
             pinned: true,
           ),
-          SliverToBoxAdapter(
-            child: ListView.separated(
-              itemCount: tasks.length,
-              shrinkWrap: true,
-              primary: false,
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return TaskTail(
-                  taskModel: tasks[index],
-                );
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                height: 10,
-              ),
-            ),
-          ),
+          // SliverToBoxAdapter(
+          //   child: ListView.separated(
+          //     itemCount: tasks.length,
+          //     shrinkWrap: true,
+          //     primary: false,
+          //     physics: NeverScrollableScrollPhysics(),
+          //     itemBuilder: (context, index) {
+          //       return TaskTail(
+          //         taskModel: tasks[index],
+          //       );
+          //     },
+          //     separatorBuilder: (context, index) => SizedBox(
+          //       height: 10,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

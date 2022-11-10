@@ -4,8 +4,10 @@ class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.onPressed,
+    required this.text,
   });
   final Function()? onPressed;
+  final String text;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,7 +21,7 @@ class CustomButton extends StatelessWidget {
             ])),
         child: ElevatedButton(
           onPressed: onPressed,
-          child: Text("Mark as done"),
+          child: Text(text),
           style: ButtonStyle(
               maximumSize: MaterialStateProperty.all(
                 Size(MediaQuery.of(context).size.width, 40),
