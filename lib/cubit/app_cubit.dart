@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:habbit/cubit/app_states.dart';
 import 'package:habbit/db_helper/database_helper.dart';
 import 'package:habbit/models/task_model.dart';
+import 'package:habbit/models/task_type_model.dart';
+import 'package:intl/intl.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitialAppState());
@@ -35,7 +38,8 @@ class AppCubit extends Cubit<AppState> {
       type: type,
       description: description,
     );
-    await DataBaseHelper.addTask(task: taskModel).then((value) {
+    DataBaseHelper.addTask(task: taskModel).then((value) {
+      print("added");
       emit(AddTaskState());
     });
   }
@@ -63,69 +67,37 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
-  List<TaskModel> schoolTasks = [];
-  void getSchoolTasks() async {
-    await DataBaseHelper.getQueryTasks(query: "type = ?", values: ["school"])
+  List<TaskModel> shownTasks = [];
+  List<TaskTypeModel> taskType = [];
+  void getTypedTasks({required String type}) async {
+    await TaskTypeModel.getTaskTypes().then((value) {
+      taskType = value;
+    });
+    await DataBaseHelper.getQueryTasks(query: "type = ?", values: [type])
         .then((value) {
       value.forEach(
         (element) {
-          schoolTasks.add(TaskModel.fromMap(map: element));
+          shownTasks.add(TaskModel.fromMap(map: element));
         },
       );
-      emit(GetSchoolTasksState());
+      emit(GetTypedTasksState());
     });
   }
 
-  List<TaskModel> workTasks = [];
-  void getWorkTasks() async {
-    await DataBaseHelper.getQueryTasks(query: "type = ?", values: ["work"])
+  List<TaskModel> statusBasedTasks = [];
+  void getStatusBasedTasks({required String status}) async {
+    await TaskTypeModel.getTaskTypes().then((value) {
+      taskType = value;
+    });
+    await DataBaseHelper.getQueryTasks(query: "status = ?", values: [status])
         .then((value) {
       value.forEach(
         (element) {
-          workTasks.add(TaskModel.fromMap(map: element));
+          statusBasedTasks.add(TaskModel.fromMap(map: element));
         },
       );
-      emit(GetWorkTasksState());
-    });
-  }
-
-  List<TaskModel> healthTasks = [];
-  void getHealthTasks() async {
-    await DataBaseHelper.getQueryTasks(query: "type = ?", values: ["health"])
-        .then((value) {
-      value.forEach(
-        (element) {
-          healthTasks.add(TaskModel.fromMap(map: element));
-        },
-      );
-      emit(GetHealthTasksState());
-    });
-  }
-
-  List<TaskModel> otherTasks = [];
-  void getOtherTasks() async {
-    await DataBaseHelper.getQueryTasks(query: "type = ?", values: ["other"])
-        .then((value) {
-      value.forEach(
-        (element) {
-          otherTasks.add(TaskModel.fromMap(map: element));
-        },
-      );
-      emit(GetOtherTasksState());
-    });
-  }
-
-  List<TaskModel> ongoingTasks = [];
-  void getOngoingTasks() async {
-    await DataBaseHelper.getQueryTasks(query: "status = ?", values: [
-      "ongoing",
-    ]).then((value) {
-      value.forEach(
-        (element) {
-          ongoingTasks.add(TaskModel.fromMap(map: element));
-        },
-      );
-      emit(GetOngoingTasksState());
+      print(value);
+      emit(GetStatusBasedTasksState());
     });
   }
 
@@ -133,9 +105,32 @@ class AppCubit extends Cubit<AppState> {
   void searchTask({required String value}) async {
     DataBaseHelper.searchAboutTasks(value: value).then((value) {
       value.forEach((element) {
-        TaskModel.fromMap(map: element);
+        searchedTasks.add(TaskModel.fromMap(map: element));
       });
       emit(SearchState());
     });
+  }
+
+  String? date;
+  void changeDate({required DateTime dateTime}) {
+    date = DateFormat.yMMMd().format(dateTime);
+    emit(ChangeDateState());
+  }
+
+  String? time;
+  void changeTime({required timeOfDay}) {
+    time = DateFormat.jm().format(dateTimeExtension(timeOfDay));
+
+    emit(ChangeTimeState());
+  }
+
+  DateTime dateTimeExtension(TimeOfDay time) {
+    return DateTime(
+      2000,
+      1,
+      1,
+      time.hour,
+      time.minute,
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CustomDockedButton extends StatelessWidget {
   const CustomDockedButton({super.key});

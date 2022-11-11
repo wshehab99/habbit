@@ -10,14 +10,12 @@ class AddTaskState extends AppState {}
 
 class UpdateTaskState extends AppState {}
 
-class GetSchoolTasksState extends AppState {}
-
-class GetWorkTasksState extends AppState {}
-
-class GetHealthTasksState extends AppState {}
-
-class GetOngoingTasksState extends AppState {}
-
-class GetOtherTasksState extends AppState {}
-
 class SearchState extends AppState {}
+
+class GetTypedTasksState extends AppState {}
+
+class GetStatusBasedTasksState extends AppState {}
+
+class ChangeDateState extends AppState {}
+
+class ChangeTimeState extends AppState {}

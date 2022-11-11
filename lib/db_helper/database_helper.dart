@@ -4,18 +4,18 @@ import 'package:sqflite/sqflite.dart';
 class DataBaseHelper {
   static Database? database;
   static Future<void> init() async {
-    database =
-        await openDatabase("tasks.db", onCreate: (Database db, int version) {
+    database = await openDatabase("tasks.db", version: 1,
+        onCreate: (Database db, int version) {
       db.execute(
-        "CREATE TABLE tasks (id INTEGER PRIMARY KEY, name TEXT, description TEXT, startTime TEXT, endTime TEXT, date TEXT, status TEXT, type TEXT,",
+        "CREATE TABLE tasks (id INTEGER PRIMARY KEY, name TEXT, description TEXT, startTime TEXT, endTime TEXT, date TEXT, status TEXT, type TEXT)",
       );
     });
   }
 
   static Future<void> addTask({required TaskModel task}) async {
-    await database!.transaction((txn) {
-      return txn.rawInsert(
-          "INSERT INTO tasks (id, name, description, startTime, endTime, date, status,type) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    await database!.transaction((txn) async {
+      return await txn.rawInsert(
+          "INSERT INTO tasks ( name, description, startTime, endTime, date, status,type) VALUES (?, ?, ?, ?, ?, ?, ?)",
           [
             task.name,
             task.description,
@@ -69,7 +69,7 @@ class DataBaseHelper {
     required String query,
     required List values,
   }) async {
-    return Sqflite.firstIntValue(await database!.rawQuery(
+    return await Sqflite.firstIntValue(await database!.rawQuery(
       "SELECT SUM(CASE WHEN $query THEN 1 ELSE 0 END) FROM tasks",
       values,
     ));
