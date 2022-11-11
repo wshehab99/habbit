@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../models/task_type_model.dart';
@@ -121,9 +122,7 @@ class TaskDetailsAppBar extends SliverPersistentHeaderDelegate {
                 icon: const Icon(Icons.edit),
               ),
               IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () {},
                 icon: const Icon(Icons.add),
               ),
             ],
