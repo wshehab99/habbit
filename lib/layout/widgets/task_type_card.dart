@@ -8,7 +8,6 @@ class TaskTypeCardWidget extends StatelessWidget {
     super.key,
     this.taskTypeModel,
   });
-
   final TaskTypeModel? taskTypeModel;
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class TaskTypeCardWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => TaskTypeDetailsScreen(
-                taskTypeModel: taskTypeModel!,
+                taskTypeModel: taskTypeModel,
               ),
             ),
           );

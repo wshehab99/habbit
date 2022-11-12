@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habbit/cubit/app_cubit.dart';
+import 'package:habbit/cubit/app_states.dart';
 import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CustomDockedButton extends StatelessWidget {
   const CustomDockedButton({super.key});
@@ -16,27 +18,35 @@ class CustomDockedButton extends StatelessWidget {
             Colors.pink.shade400,
             Colors.pink.shade100,
           ])),
-      child: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        focusElevation: 0,
-        highlightElevation: 0,
-        disabledElevation: 0,
-        hoverElevation: 0,
-        onPressed: () {
-          showModalBottomSheet(
+      child: BlocBuilder<AppCubit, AppState>(builder: (context, state) {
+        AppCubit cubit = context.read<AppCubit>();
+        return FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          focusElevation: 0,
+          highlightElevation: 0,
+          disabledElevation: 0,
+          hoverElevation: 0,
+          onPressed: () {
+            showModalBottomSheet(
+              isDismissible: true,
+              isScrollControlled: true,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                 top: Radius.circular(25),
               )),
               context: context,
               builder: (context) => BottomSheetWidget(
-                    add: true,
-                  ));
-        },
-        elevation: 0,
-        child: Icon(Icons.add),
-      ),
+                add: true,
+              ),
+            ).then((value) {
+              cubit.getStatusBasedTasks(status: "ongoing");
+            });
+          },
+          elevation: 0,
+          child: Icon(Icons.add),
+        );
+      }),
     );
   }
 }

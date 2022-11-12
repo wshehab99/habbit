@@ -1,14 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
+
 import 'package:habbit/models/task_model.dart';
 
 class TaskTail extends StatelessWidget {
-  TaskTail({
-    super.key,
-    this.taskModel,
-  });
+  TaskTail({super.key, this.taskModel, this.onPressed});
+  final void Function()? onPressed;
   final TaskModel? taskModel;
   final List colors = [
     Colors.red[100],
@@ -31,20 +29,7 @@ class TaskTail extends StatelessWidget {
         color: Colors.white,
       ),
       child: InkWell(
-        onTap: () {
-          showBottomSheet(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(25),
-                ),
-              ),
-              context: context,
-              builder: (context) {
-                return BottomSheetWidget(
-                  taskModel: taskModel!,
-                );
-              });
-        },
+        onTap: onPressed,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             taskModel!.name!,

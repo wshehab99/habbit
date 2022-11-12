@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData lightTheme = ThemeData(
+    visualDensity: VisualDensity.adaptivePlatformDensity,
     iconTheme: const IconThemeData(
       color: Colors.black,
     ),

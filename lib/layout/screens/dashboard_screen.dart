@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:habbit/cubit/app_cubit.dart';
 import 'package:habbit/cubit/app_states.dart';
+import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
 import 'package:habbit/layout/widgets/task_tail.dart';
 
 import '../widgets/task_type_card.dart';
@@ -86,6 +87,22 @@ class DashBoardScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return TaskTail(
                       taskModel: cubit.statusBasedTasks[index],
+                      onPressed: () {
+                        showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(25),
+                              ),
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return BottomSheetWidget(
+                                taskModel: cubit.statusBasedTasks[index],
+                              );
+                            }).then((value) {
+                          cubit.getStatusBasedTasks(status: "ongoing");
+                        });
+                      },
                     );
                   },
                   separatorBuilder: (context, index) => const SizedBox(

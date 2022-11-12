@@ -15,6 +15,7 @@ class TaskModel {
     required this.status,
     required this.type,
     required this.description,
+    this.id,
   });
   TaskModel.fromMap({required Map<String, dynamic> map}) {
     id = map['id'];

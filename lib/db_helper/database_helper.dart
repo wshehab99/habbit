@@ -34,7 +34,7 @@ class DataBaseHelper {
 
   static Future<void> updateTask({required TaskModel task}) async {
     database!.rawUpdate(
-        "UPDATE tasks SET name = ?, description = ?, startTime = ?, endTime = ?, date = ?, status = ? WHERE id = ?",
+        "UPDATE tasks SET name = ?, description = ?, startTime = ?, endTime = ?, date = ?, status = ?, type = ? WHERE id = ?",
         [
           task.name,
           task.description,

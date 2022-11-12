@@ -4,6 +4,7 @@ import 'package:habbit/cubit/app_states.dart';
 import 'package:habbit/db_helper/database_helper.dart';
 import 'package:habbit/models/task_model.dart';
 import 'package:habbit/models/task_type_model.dart';
+import 'package:habbit/models/time_date_model.dart';
 import 'package:intl/intl.dart';
 
 class AppCubit extends Cubit<AppState> {
@@ -20,7 +21,7 @@ class AppCubit extends Cubit<AppState> {
     emit(ChangePage());
   }
 
-  void addTask({
+  Future<void> addTask({
     required String name,
     required String description,
     required String date,
@@ -44,7 +45,7 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
-  void updateTask({
+  Future<void> updateTask({
     required String name,
     required String description,
     required String date,
@@ -52,8 +53,10 @@ class AppCubit extends Cubit<AppState> {
     required String endTime,
     required String status,
     required String type,
+    required int id,
   }) async {
     TaskModel task = TaskModel(
+      id: id,
       name: name,
       date: date,
       startTime: startTime,
@@ -69,12 +72,13 @@ class AppCubit extends Cubit<AppState> {
 
   List<TaskModel> shownTasks = [];
   List<TaskTypeModel> taskType = [];
-  void getTypedTasks({required String type}) async {
+  Future<void> getTypedTasks({required String type}) async {
+    shownTasks = [];
     await TaskTypeModel.getTaskTypes().then((value) {
       taskType = value;
     });
-    await DataBaseHelper.getQueryTasks(query: "type = ?", values: [type])
-        .then((value) {
+    await DataBaseHelper.getQueryTasks(
+        query: "type = ?", values: [type.toLowerCase()]).then((value) {
       value.forEach(
         (element) {
           shownTasks.add(TaskModel.fromMap(map: element));
@@ -86,6 +90,7 @@ class AppCubit extends Cubit<AppState> {
 
   List<TaskModel> statusBasedTasks = [];
   void getStatusBasedTasks({required String status}) async {
+    statusBasedTasks = [];
     await TaskTypeModel.getTaskTypes().then((value) {
       taskType = value;
     });
@@ -111,26 +116,46 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
+  String? dropValue;
+  void changeTaskType({required String value}) {
+    dropValue = value;
+    emit(ChangeDropDownValueState());
+  }
+
   String? date;
   void changeDate({required DateTime dateTime}) {
-    date = DateFormat.yMMMd().format(dateTime);
+    date = TimeDateModel.formatDate(dateTime);
     emit(ChangeDateState());
   }
 
-  String? time;
+  String? startTime;
+  String? endTime;
   void changeTime({required timeOfDay}) {
-    time = DateFormat.jm().format(dateTimeExtension(timeOfDay));
+    startTime = TimeDateModel.formatTime(timeOfDay);
+    endTime = TimeDateModel.formatTime(
+      timeOfDay,
+      isEnd: true,
+    );
 
     emit(ChangeTimeState());
   }
 
-  DateTime dateTimeExtension(TimeOfDay time) {
-    return DateTime(
-      2000,
-      1,
-      1,
-      time.hour,
-      time.minute,
-    );
+  String? title = "";
+  String? description = "";
+  void onTextFieldChange({required String text, isTitle}) {
+    if (isTitle) {
+      title = text;
+    } else {
+      description = text;
+    }
+  }
+
+  void initTaskValues({required TaskModel task}) {
+    title = task.name!;
+    description = task.description!;
+    startTime = task.startTime!;
+    endTime = task.endTime!;
+    date = task.date!;
+    dropValue = task.type;
   }
 }
