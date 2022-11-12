@@ -5,9 +5,13 @@ import 'package:percent_indicator/percent_indicator.dart';
 import '../../models/task_type_model.dart';
 
 class TaskDetailsAppBar extends SliverPersistentHeaderDelegate {
-  TaskDetailsAppBar({this.taskTypeModel, required this.expandedHeight});
+  TaskDetailsAppBar({
+    this.taskTypeModel,
+    required this.expandedHeight,
+    this.actions,
+  });
   final double expandedHeight;
-
+  final List<Widget>? actions;
   final TaskTypeModel? taskTypeModel;
   double percent = 0;
   @override
@@ -114,18 +118,7 @@ class TaskDetailsAppBar extends SliverPersistentHeaderDelegate {
               },
               icon: const Icon(Icons.arrow_back_ios),
             ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.edit),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.add),
-              ),
-            ],
+            actions: actions,
             shape: RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(25))),

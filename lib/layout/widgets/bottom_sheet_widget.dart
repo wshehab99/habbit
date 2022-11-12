@@ -19,59 +19,53 @@ class BottomSheetWidget extends StatelessWidget {
   final TaskModel? taskModel;
   final formKey = GlobalKey<FormState>();
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+
   final bool add;
-  final DropDownTaskType downTaskType = DropDownTaskType(
-    items: const [
-      "school",
-      "work",
-      "health",
-      "other",
-    ],
-    validator: (value) {
-      if (value!.isEmpty) {
-        return "Task type must not be empty";
-      }
-    },
-  );
   @override
   Widget build(BuildContext context) {
-    if (taskModel != null) {
-      titleController.text = taskModel!.name!;
-      descriptionController.text = taskModel!.description!;
-      downTaskType.dropValue = taskModel!.type;
-    }
-
-    return BlocProvider(
-      create: ((context) => AppCubit()),
-      child: BlocBuilder<AppCubit, AppState>(
-        builder: (context, state) {
-          AppCubit cubit = context.read<AppCubit>();
-          return SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        left: 15,
+        right: 15,
+      ),
+      child: SingleChildScrollView(
+        child: BlocProvider(
+          create: ((context) => AppCubit()),
+          child: BlocBuilder<AppCubit, AppState>(
+            builder: (context, state) {
+              AppCubit cubit = context.read<AppCubit>();
+              if (taskModel != null) {
+                cubit.initTaskValues(task: taskModel!);
+              }
+              return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: SvgPicture.asset("assets/svg/trash.svg"),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: SvgPicture.asset("assets/svg/complete.svg"),
-                      ),
-                    ],
-                  ),
+                  !add
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset("assets/svg/trash.svg"),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset("assets/svg/complete.svg"),
+                            ),
+                          ],
+                        )
+                      : SizedBox(
+                          height: 15,
+                        ),
                   TaskDetailsTextField(
-                    controller: titleController,
+                    value: cubit.title,
+                    onChanged: (value) {
+                      cubit.onTextFieldChange(text: value, isTitle: true);
+                    },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Task title must not be empty";
@@ -81,10 +75,13 @@ class BottomSheetWidget extends StatelessWidget {
                     hint: "Task Title",
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   TaskDetailsTextField(
-                    controller: descriptionController,
+                    value: cubit.description,
+                    onChanged: (value) {
+                      cubit.onTextFieldChange(text: value, isTitle: false);
+                    },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Task description must not be empty";
@@ -94,107 +91,138 @@ class BottomSheetWidget extends StatelessWidget {
                     maxLines: 3,
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      children: [
-                        TimeDateWidget(
-                          text: (add && cubit.date == null)
-                              ? "date"
-                              : cubit.date != null
-                                  ? cubit.date
-                                  : taskModel!.date!,
-                          icon: (add && cubit.date == null)
-                              ? SizedBox()
-                              : SvgPicture.asset(
-                                  "assets/svg/date.svg",
-                                  color: Colors.white,
-                                  height: 18,
-                                ),
-                          onPressed: () {
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(2050),
-                            ).then(
-                              (value) {
-                                cubit.changeDate(dateTime: value!);
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        TimeDateWidget(
-                          text: (add && cubit.time == null)
-                              ? "time"
-                              : cubit.time != null
-                                  ? cubit.time!
-                                  : taskModel!.startTime!,
-                          icon: (add && cubit.time == null)
-                              ? SizedBox()
-                              : SvgPicture.asset(
-                                  "assets/svg/clock.svg",
-                                  height: 18,
-                                  color: Colors.white,
-                                ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              showPicker(
-                                context: context,
-                                value: TimeOfDay.now(),
-                                onChange: (value) {
-                                  if (value != null) {
-                                    cubit.changeTime(timeOfDay: value);
-                                  }
-                                },
-                                blurredBackground: true,
+                  Row(
+                    children: [
+                      TimeDateWidget(
+                        text: (add && cubit.date == null)
+                            ? "date"
+                            : cubit.date != null
+                                ? cubit.date
+                                : taskModel!.date!,
+                        icon: (add && cubit.date == null)
+                            ? SizedBox()
+                            : SvgPicture.asset(
+                                "assets/svg/date.svg",
+                                color: Colors.white,
+                                height: 18,
                               ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                        onPressed: () {
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2050),
+                          ).then(
+                            (value) {
+                              cubit.changeDate(dateTime: value!);
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      TimeDateWidget(
+                        text: (add && cubit.startTime == null)
+                            ? "time"
+                            : cubit.startTime != null
+                                ? cubit.startTime!
+                                : taskModel!.startTime!,
+                        icon: (add && cubit.startTime == null)
+                            ? SizedBox()
+                            : SvgPicture.asset(
+                                "assets/svg/clock.svg",
+                                height: 18,
+                                color: Colors.white,
+                              ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            showPicker(
+                              context: context,
+                              value: TimeOfDay.now(),
+                              onChange: (value) {
+                                if (value != null) {
+                                  cubit.changeTime(timeOfDay: value);
+                                }
+                              },
+                              blurredBackground: true,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
-                  downTaskType,
+                  DropDownTaskType(
+                    items: const [
+                      "school",
+                      "work",
+                      "health",
+                      "other",
+                    ],
+                    dropValue: cubit.dropValue,
+                    onChanged: (value) {
+                      cubit.changeTaskType(value: value!);
+                    },
+                  ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   CustomButton(
                     text: add ? "Add to your tasks" : "Mark as completed",
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
+                    onPressed: () async {
+                      if (cubit.title != null &&
+                          cubit.description != null &&
+                          cubit.date != null &&
+                          cubit.startTime != null &&
+                          cubit.dropValue != null) {
                         add
-                            ? cubit.addTask(
-                                name: titleController.text,
-                                description: descriptionController.text,
-                                date: "22 june 2020",
-                                startTime: "11:00 pm",
-                                endTime: "01:00 am",
+                            ? cubit
+                                .addTask(
+                                name: cubit.title!,
+                                description: cubit.description!,
+                                date: cubit.date ?? taskModel!.date!,
+                                startTime: cubit.startTime!,
+                                endTime: cubit.endTime!,
                                 status: "ongoing",
-                                type: downTaskType.dropValue!,
+                                type: cubit.dropValue!,
                               )
-                            : {};
+                                .then((value) {
+                                Navigator.pop(context);
+                              })
+                            : {
+                                cubit
+                                    .updateTask(
+                                  id: taskModel!.id!,
+                                  name: cubit.title!,
+                                  description: cubit.description!,
+                                  date: cubit.date ?? taskModel!.date!,
+                                  startTime: cubit.startTime!,
+                                  endTime: cubit.endTime!,
+                                  status: "done",
+                                  type: cubit.dropValue!,
+                                )
+                                    .then((value) {
+                                  Navigator.pop(context);
+                                })
+                              };
                       } else {
                         //print("null");
                       }
                     },
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 30,
-                  ),
+                  )
                 ],
-              ),
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
     );
   }

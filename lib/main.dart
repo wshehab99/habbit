@@ -18,7 +18,20 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
-      home: OnBoardingScreen(),
+      home: Builder(builder: (context) {
+        ResponsiveApp.setMq(context);
+        return OnBoardingScreen();
+      }),
     );
+  }
+}
+
+class ResponsiveApp {
+  static MediaQueryData? _mediaQueryData;
+
+  MediaQueryData get mq => _mediaQueryData!;
+
+  static void setMq(BuildContext context) {
+    _mediaQueryData = MediaQuery.of(context);
   }
 }
