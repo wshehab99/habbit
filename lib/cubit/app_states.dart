@@ -22,4 +22,8 @@ class ChangeDropDownValueState extends AppState {}
 
 class ChangeTimeState extends AppState {}
 
-class OpenCloseBottomSheet extends AppState {}
+class ChangeSelectedDate extends AppState {}
+
+class GetDatedTasksState extends AppState {}
+
+class LoadingState extends AppState {}

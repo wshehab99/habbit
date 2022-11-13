@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:habbit/cubit/app_states.dart';
 import 'package:habbit/db_helper/database_helper.dart';
 import 'package:habbit/models/task_model.dart';
 import 'package:habbit/models/task_type_model.dart';
 import 'package:habbit/models/time_date_model.dart';
-import 'package:intl/intl.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(InitialAppState());
@@ -101,18 +99,34 @@ class AppCubit extends Cubit<AppState> {
           statusBasedTasks.add(TaskModel.fromMap(map: element));
         },
       );
-      print(value);
+
       emit(GetStatusBasedTasksState());
     });
   }
 
   List<TaskModel> searchedTasks = [];
   void searchTask({required String value}) async {
+    searchedTasks = [];
     DataBaseHelper.searchAboutTasks(value: value).then((value) {
       value.forEach((element) {
         searchedTasks.add(TaskModel.fromMap(map: element));
       });
       emit(SearchState());
+    });
+  }
+
+  List<TaskModel> datedTasks = [];
+  void getDatedTasks({required DateTime date}) async {
+    emit(LoadingState());
+    datedTasks = [];
+    await DataBaseHelper.getQueryTasks(
+        query: "date = ?",
+        values: [TimeDateModel.formatDate(date)]).then((value) {
+      value.forEach((element) {
+        datedTasks.add(TaskModel.fromMap(map: element));
+      });
+      print(value);
+      emit(GetDatedTasksState());
     });
   }
 
@@ -158,4 +172,16 @@ class AppCubit extends Cubit<AppState> {
     date = task.date!;
     dropValue = task.type;
   }
+
+  int selectedDateIndex = 0;
+  void changeSelectedDate(int index) {
+    selectedDateIndex = index;
+    emit(ChangeSelectedDate());
+  }
+
+  List days = TimeDateModel.getDateBetween(
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(
+        Duration(days: 365),
+      ));
 }

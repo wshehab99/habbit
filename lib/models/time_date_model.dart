@@ -28,4 +28,21 @@ class TimeDateModel {
       time.minute,
     );
   }
+
+  static String getWeekday(DateTime date) {
+    return DateFormat.E().format(date);
+  }
+
+  static List<DateTime> getDateBetween(
+      {required DateTime startDate, required DateTime endDate}) {
+    List<DateTime> days = [];
+    for (int i = 0; i < endDate.difference(startDate).inDays; i++) {
+      days.add(startDate.add(Duration(days: i)));
+    }
+    return days;
+  }
+
+  static String getMonth(DateTime date) {
+    return DateFormat.MMM().format(date);
+  }
 }
