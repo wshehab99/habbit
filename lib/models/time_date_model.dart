@@ -11,12 +11,12 @@ class TimeDateModel {
     bool isEnd = false,
   }) {
     return isEnd
-        ? DateFormat.jm().format(dateTimeExtension(timeOfDay))
-        : DateFormat.jm().format(
+        ? DateFormat.jm().format(
             dateTimeExtension(timeOfDay).add(
               Duration(hours: 1),
             ),
-          );
+          )
+        : DateFormat.jm().format(dateTimeExtension(timeOfDay));
   }
 
   static DateTime dateTimeExtension(TimeOfDay time) {
@@ -44,5 +44,22 @@ class TimeDateModel {
 
   static String getMonth(DateTime date) {
     return DateFormat.MMM().format(date);
+  }
+
+  static DateTime getDateFromString(String date) {
+    print(DateFormat("yMMMd").parse(date));
+    return DateFormat("yMMMd").parse(date);
+  }
+
+  static TimeOfDay getTimeFromString(String time) {
+    return TimeOfDay.fromDateTime(DateFormat("jm").parse(time));
+  }
+
+  static String subtractTimes(
+      {required String startTime, required String endTime}) {
+    return dateTimeExtension(getTimeFromString(endTime))
+        .difference(dateTimeExtension(getTimeFromString(startTime)))
+        .inMinutes
+        .toString();
   }
 }

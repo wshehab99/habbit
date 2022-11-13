@@ -6,14 +6,17 @@ class TaskSearchTextField extends StatelessWidget {
     super.key,
     this.controller,
     this.isSearch = false,
+    this.searchMethod,
   });
   final TextEditingController? controller;
   final bool isSearch;
+  final Function(String)? searchMethod;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: isSearch ? 60 : 40,
       child: TextField(
+        onChanged: searchMethod,
         readOnly: !isSearch,
         autofocus: isSearch,
         onTap: () {

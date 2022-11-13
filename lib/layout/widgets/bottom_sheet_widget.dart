@@ -1,14 +1,20 @@
 import 'package:day_night_time_picker/lib/daynight_timepicker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habbit/cubit/app_cubit.dart';
 import 'package:habbit/cubit/app_states.dart';
 import 'package:habbit/layout/widgets/coustom_button.dart';
 import 'package:habbit/layout/widgets/drop_down_task_type.dart';
+import 'package:habbit/layout/widgets/hobbit_date_dialog.dart';
+import 'package:habbit/layout/widgets/hobbit_delete_dialog.dart';
+import 'package:habbit/layout/widgets/hobbit_time_dialog.dart';
+import 'package:habbit/layout/widgets/hobbit_toast.dart';
 import 'package:habbit/layout/widgets/task_details_text_field.dart';
 import 'package:habbit/layout/widgets/time_date_widget.dart';
 import 'package:habbit/models/task_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:habbit/models/time_date_model.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   BottomSheetWidget({
@@ -35,7 +41,7 @@ class BottomSheetWidget extends StatelessWidget {
           child: BlocBuilder<AppCubit, AppState>(
             builder: (context, state) {
               AppCubit cubit = context.read<AppCubit>();
-              if (taskModel != null) {
+              if (taskModel != null && state is InitialAppState) {
                 cubit.initTaskValues(task: taskModel!);
               }
               return Column(
@@ -46,19 +52,50 @@ class BottomSheetWidget extends StatelessWidget {
                           children: [
                             IconButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                HobbitDeleteDialog.showHobbitDialog(
+                                  context: context,
+                                  deleteMethod: () {
+                                    cubit
+                                        .deleteTask(id: taskModel!.id!)
+                                        .then((value) {
+                                      HobbitToast.showToast(
+                                          state: ToastState.delete);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  cancelMethod: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
                               },
                               icon: SvgPicture.asset("assets/svg/trash.svg"),
                             ),
                             IconButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                cubit
+                                    .updateTask(
+                                  id: taskModel!.id!,
+                                  name: cubit.title!,
+                                  description: cubit.description!,
+                                  date: cubit.date ?? taskModel!.date!,
+                                  startTime: cubit.startTime!,
+                                  endTime: cubit.endTime!,
+                                  status: taskModel!.status!,
+                                  type: cubit.dropValue!,
+                                )
+                                    .then((value) {
+                                  HobbitToast.showToast(
+                                    state: ToastState.update,
+                                  );
+                                  Navigator.pop(context);
+                                });
                               },
                               icon: SvgPicture.asset("assets/svg/complete.svg"),
                             ),
                           ],
                         )
-                      : SizedBox(
+                      : const SizedBox(
                           height: 15,
                         ),
                   TaskDetailsTextField(
@@ -102,21 +139,24 @@ class BottomSheetWidget extends StatelessWidget {
                                 ? cubit.date
                                 : taskModel!.date!,
                         icon: (add && cubit.date == null)
-                            ? SizedBox()
+                            ? const SizedBox()
                             : SvgPicture.asset(
                                 "assets/svg/date.svg",
                                 color: Colors.white,
                                 height: 18,
                               ),
                         onPressed: () {
-                          showDatePicker(
+                          HobbitDateDialog.showDateDialog(
                             context: context,
-                            initialDate: DateTime.now(),
+                            initialDate: cubit.date != null
+                                ? TimeDateModel.getDateFromString(cubit.date!)
+                                : DateTime.now(),
                             firstDate: DateTime.now(),
-                            lastDate: DateTime(2050),
                           ).then(
                             (value) {
-                              cubit.changeDate(dateTime: value!);
+                              if (value != null) {
+                                cubit.changeDate(dateTime: value);
+                              }
                             },
                           );
                         },
@@ -131,25 +171,22 @@ class BottomSheetWidget extends StatelessWidget {
                                 ? cubit.startTime!
                                 : taskModel!.startTime!,
                         icon: (add && cubit.startTime == null)
-                            ? SizedBox()
+                            ? const SizedBox()
                             : SvgPicture.asset(
                                 "assets/svg/clock.svg",
                                 height: 18,
                                 color: Colors.white,
                               ),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            showPicker(
+                          HobbitTimeDialog.showTimeDialog(
                               context: context,
-                              value: TimeOfDay.now(),
+                              value: cubit.startTime != null
+                                  ? TimeDateModel.getTimeFromString(
+                                      cubit.startTime!)
+                                  : TimeOfDay.now(),
                               onChange: (value) {
-                                if (value != null) {
-                                  cubit.changeTime(timeOfDay: value);
-                                }
-                              },
-                              blurredBackground: true,
-                            ),
-                          );
+                                cubit.changeTime(timeOfDay: value);
+                              });
                         },
                       ),
                     ],
@@ -173,7 +210,11 @@ class BottomSheetWidget extends StatelessWidget {
                     height: 15,
                   ),
                   CustomButton(
-                    text: add ? "Add to your tasks" : "Mark as completed",
+                    text: add
+                        ? "Add to your tasks"
+                        : taskModel!.status == "done"
+                            ? "Mark as ongoing"
+                            : "Mark as completed",
                     onPressed: () async {
                       if (cubit.title != null &&
                           cubit.description != null &&
@@ -192,6 +233,9 @@ class BottomSheetWidget extends StatelessWidget {
                                 type: cubit.dropValue!,
                               )
                                 .then((value) {
+                                HobbitToast.showToast(
+                                  state: ToastState.add,
+                                );
                                 Navigator.pop(context);
                               })
                             : {
@@ -203,19 +247,26 @@ class BottomSheetWidget extends StatelessWidget {
                                   date: cubit.date ?? taskModel!.date!,
                                   startTime: cubit.startTime!,
                                   endTime: cubit.endTime!,
-                                  status: "done",
+                                  status: taskModel!.status == "done"
+                                      ? "ongoing"
+                                      : "done",
                                   type: cubit.dropValue!,
                                 )
                                     .then((value) {
+                                  HobbitToast.showToast(
+                                    state: ToastState.update,
+                                  );
                                   Navigator.pop(context);
                                 })
                               };
                       } else {
-                        //print("null");
+                        HobbitToast.showToast(
+                          state: ToastState.error,
+                        );
                       }
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   )
                 ],

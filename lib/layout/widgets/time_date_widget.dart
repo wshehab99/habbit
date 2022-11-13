@@ -16,12 +16,12 @@ class TimeDateWidget extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient: LinearGradient(colors: [
+              Colors.deepPurple.shade200,
               Colors.indigo.shade300,
-              Colors.deepPurple.shade300,
             ]),
           ),
           child: Row(
@@ -31,12 +31,12 @@ class TimeDateWidget extends StatelessWidget {
               icon!,
               Text(
                 text!,
-                style: TextStyle(
-                  fontSize: 16,
+                style: const TextStyle(
+                  fontSize: 18,
                   color: Colors.white,
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.close,
                 size: 10,
                 color: Colors.white,

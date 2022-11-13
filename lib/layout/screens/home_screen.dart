@@ -26,11 +26,13 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => AppCubit()
         ..getStatusBasedTasks(status: "ongoing")
-        ..getDatedTasks(date: DateTime.now()),
+        ..getDatedTasks(date: DateTime.now())
+        ..getDoneTasks(),
       child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           AppCubit cubit = context.read<AppCubit>();
           return Scaffold(
+            backgroundColor: Color.fromARGB(250, 250, 250, 250),
             key: scaffoldKey,
             bottomNavigationBar: HobbitNavigationBar(
               currentIndex: cubit.currentIndex,
@@ -39,6 +41,8 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               toolbarHeight: cubit.currentIndex == 0 ? 55 : 80,
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.start,

@@ -14,15 +14,14 @@ class DateDayWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 15,
-        vertical: 15,
+        vertical: 20,
       ),
-      width: 65,
-      height: 130,
+      width: 75,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(35),
         gradient: LinearGradient(
           colors: [
-            isSelected ? Colors.amber.shade400 : Colors.white54,
+            isSelected ? Colors.amber.shade400 : Colors.white30,
             isSelected ? Colors.deepOrange.shade400 : Colors.white60,
           ],
           begin: Alignment.topLeft,
@@ -30,11 +29,11 @@ class DateDayWidget extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${TimeDateModel.getMonth(date)}",
+            TimeDateModel.getMonth(date),
             style: TextStyle(
               fontSize: 16,
               color: isSelected ? Colors.white : Colors.black,
@@ -50,7 +49,7 @@ class DateDayWidget extends StatelessWidget {
             ),
           ),
           Text(
-            "${TimeDateModel.getWeekday(date)}",
+            TimeDateModel.getWeekday(date),
             style: TextStyle(
               fontSize: 16,
               color: isSelected ? Colors.white : Colors.black,
