@@ -29,7 +29,7 @@ class DataBaseHelper {
   }
 
   static Future<void> deleteTask(int id) async {
-    await database!.rawDelete("DELETE FROM tasks WHERE id = ?,", [id]);
+    await database!.rawDelete("DELETE FROM tasks WHERE id = ?", [id]);
   }
 
   static Future<void> updateTask({required TaskModel task}) async {
@@ -61,8 +61,8 @@ class DataBaseHelper {
   static Future<List<Map<String, dynamic>>> searchAboutTasks({
     required String value,
   }) async {
-    return database!
-        .rawQuery("SELECT * FROM tasks WHERE name LIKE %?%", [value]);
+    return database!.rawQuery(
+        "SELECT * FROM tasks WHERE name OR description LIKE ?", ["%$value%"]);
   }
 
   static countTasksBasedOnCondition({

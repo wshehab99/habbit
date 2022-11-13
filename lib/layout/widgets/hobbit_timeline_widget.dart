@@ -20,9 +20,11 @@ class HobbitTimeLineWidget extends StatelessWidget {
       AppCubit cubit = context.read<AppCubit>();
 
       return SizedBox(
-        height: 100,
+        height: 120,
         child: ScrollablePositionedList.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          physics: const BouncingScrollPhysics(
+              decelerationRate: ScrollDecelerationRate.fast),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           itemPositionsListener: itemPositionsListener,
           itemScrollController: itemScrollController,
           itemBuilder: (context, index) {
@@ -30,6 +32,7 @@ class HobbitTimeLineWidget extends StatelessWidget {
               onTap: () {
                 cubit.changeSelectedDate(index);
                 itemScrollController.scrollTo(
+                  alignment: 0.03,
                   index: cubit.selectedDateIndex,
                   duration: const Duration(milliseconds: 600),
                 );

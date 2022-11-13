@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:habbit/cubit/app_cubit.dart';
 import 'package:habbit/cubit/app_states.dart';
+import 'package:habbit/layout/widgets/bottom_sheet_widget.dart';
 import 'package:habbit/layout/widgets/hobbit_timeline_widget.dart';
 import 'package:habbit/layout/widgets/task_tail.dart';
-import 'package:habbit/models/time_date_model.dart';
 import 'package:lottie/lottie.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -18,34 +17,54 @@ class CalendarScreen extends StatelessWidget {
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 5,
-            ),
-            HobbitTimeLineWidget(
-              initialDate: DateTime.now(),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: cubit.datedTasks.isEmpty
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              HobbitTimeLineWidget(
+                initialDate: DateTime.now(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              cubit.datedTasks.isEmpty
                   ? LottieBuilder.asset("assets/img/empty.json")
                   : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         return TaskTail(
-                          onPressed: () {},
+                          onPressed: () {
+                            showModalBottomSheet(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(25),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) {
+                                  return BottomSheetWidget(
+                                    taskModel: cubit.datedTasks[index],
+                                  );
+                                }).then((value) {
+                              cubit.getDatedTasks(
+                                date: cubit.days[cubit.selectedDateIndex],
+                              );
+                            });
+                          },
                           taskModel: cubit.datedTasks[index],
                         );
                       },
                       separatorBuilder: (context, index) =>
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
                       itemCount: cubit.datedTasks.length,
-                    ),
-            )
-          ],
+                    )
+            ],
+          ),
         ),
       );
     });

@@ -37,8 +37,7 @@ class AppCubit extends Cubit<AppState> {
       type: type,
       description: description,
     );
-    DataBaseHelper.addTask(task: taskModel).then((value) {
-      print("added");
+    await DataBaseHelper.addTask(task: taskModel).then((value) {
       emit(AddTaskState());
     });
   }
@@ -63,6 +62,7 @@ class AppCubit extends Cubit<AppState> {
       type: type,
       description: description,
     );
+
     await DataBaseHelper.updateTask(task: task).then((value) {
       emit(UpdateTaskState());
     });
@@ -104,6 +104,21 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
+  List<TaskModel> doneTasks = [];
+  Future getDoneTasks() async {
+    doneTasks.clear();
+    await DataBaseHelper.getQueryTasks(query: "status = ?", values: ["done"])
+        .then((value) {
+      value.forEach(
+        (element) {
+          doneTasks.add(TaskModel.fromMap(map: element));
+        },
+      );
+
+      emit(GetStatusBasedTasksState());
+    });
+  }
+
   List<TaskModel> searchedTasks = [];
   void searchTask({required String value}) async {
     searchedTasks = [];
@@ -125,8 +140,20 @@ class AppCubit extends Cubit<AppState> {
       value.forEach((element) {
         datedTasks.add(TaskModel.fromMap(map: element));
       });
+      datedTasks.sort((a, b) => TimeDateModel.dateTimeExtension(
+                  TimeDateModel.getTimeFromString(a.startTime!))
+              .compareTo(
+            TimeDateModel.dateTimeExtension(
+                TimeDateModel.getTimeFromString(b.startTime!)),
+          ));
       print(value);
       emit(GetDatedTasksState());
+    });
+  }
+
+  Future<void> deleteTask({required int id}) async {
+    DataBaseHelper.deleteTask(id).then((value) {
+      emit(DeleteTaskState());
     });
   }
 

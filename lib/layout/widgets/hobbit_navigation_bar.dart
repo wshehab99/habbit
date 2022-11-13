@@ -12,6 +12,8 @@ class HobbitNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: Color.fromARGB(250, 250, 250, 250),
+      elevation: 0,
       currentIndex: currentIndex,
       onTap: changeScreen,
       items: [

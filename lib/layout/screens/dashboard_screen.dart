@@ -69,14 +69,15 @@ class DashBoardScreen extends StatelessWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                const Text(
-                  "On Going",
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                if (cubit.statusBasedTasks.isNotEmpty)
+                  const Text(
+                    "On Going",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -100,6 +101,49 @@ class DashBoardScreen extends StatelessWidget {
                                 taskModel: cubit.statusBasedTasks[index],
                               );
                             }).then((value) {
+                          cubit.getStatusBasedTasks(status: "ongoing");
+                          cubit.getDoneTasks();
+                        });
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 10,
+                  ),
+                ),
+                if (cubit.doneTasks.isNotEmpty)
+                  const Text(
+                    "Done",
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ListView.separated(
+                  itemCount: cubit.doneTasks.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return TaskTail(
+                      taskModel: cubit.doneTasks[index],
+                      onPressed: () {
+                        showModalBottomSheet(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(25),
+                              ),
+                            ),
+                            context: context,
+                            builder: (context) {
+                              return BottomSheetWidget(
+                                taskModel: cubit.doneTasks[index],
+                              );
+                            }).then((value) {
+                          cubit.getDoneTasks();
                           cubit.getStatusBasedTasks(status: "ongoing");
                         });
                       },
