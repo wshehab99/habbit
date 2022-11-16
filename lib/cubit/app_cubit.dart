@@ -211,4 +211,31 @@ class AppCubit extends Cubit<AppState> {
       endDate: DateTime.now().add(
         Duration(days: 365),
       ));
+
+  List<TaskModel> todayTasks = [];
+  int selectedTaskIndex = 0;
+  void getTodayTasks() async {
+    emit(LoadingState());
+    todayTasks = [];
+    await DataBaseHelper.getQueryTasks(
+        query: "date = ?",
+        values: [TimeDateModel.formatDate(DateTime.now())]).then((value) {
+      value.forEach((element) {
+        todayTasks.add(TaskModel.fromMap(map: element));
+      });
+      todayTasks.sort((a, b) => TimeDateModel.dateTimeExtension(
+                  TimeDateModel.getTimeFromString(a.startTime!))
+              .compareTo(
+            TimeDateModel.dateTimeExtension(
+                TimeDateModel.getTimeFromString(b.startTime!)),
+          ));
+      print(value);
+      emit(GetTodayTasksState());
+    });
+  }
+
+  void changeSelectedTaskIndex(int index) {
+    selectedTaskIndex = index;
+    emit(GetTodayTasksState());
+  }
 }

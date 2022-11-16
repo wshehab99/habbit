@@ -31,7 +31,7 @@ class CustomDockedButton extends StatelessWidget {
             showModalBottomSheet(
               isDismissible: true,
               isScrollControlled: true,
-              shape: RoundedRectangleBorder(
+              shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.vertical(
                 top: Radius.circular(25),
               )),
@@ -41,10 +41,13 @@ class CustomDockedButton extends StatelessWidget {
               ),
             ).then((value) {
               cubit.getStatusBasedTasks(status: "ongoing");
+              cubit.getDoneTasks();
+              cubit.getTodayTasks();
+              cubit.getDatedTasks(date: cubit.days[cubit.selectedDateIndex]);
             });
           },
           elevation: 0,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         );
       }),
     );

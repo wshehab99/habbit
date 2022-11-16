@@ -16,10 +16,10 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   var scaffoldKey = GlobalKey<ScaffoldState>();
   final List<Widget> screens = [
-    DashBoardScreen(),
-    BagScreen(),
-    CalendarScreen(),
-    ProfileScreen(),
+    const DashBoardScreen(),
+    const BagScreen(),
+    const CalendarScreen(),
+    const ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -27,12 +27,12 @@ class HomeScreen extends StatelessWidget {
       create: (context) => AppCubit()
         ..getStatusBasedTasks(status: "ongoing")
         ..getDatedTasks(date: DateTime.now())
-        ..getDoneTasks(),
+        ..getDoneTasks()
+        ..getTodayTasks(),
       child: BlocBuilder<AppCubit, AppState>(
         builder: (context, state) {
           AppCubit cubit = context.read<AppCubit>();
           return Scaffold(
-            backgroundColor: Color.fromARGB(250, 250, 250, 250),
             key: scaffoldKey,
             bottomNavigationBar: HobbitNavigationBar(
               currentIndex: cubit.currentIndex,
@@ -41,7 +41,6 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
               elevation: 0,
               toolbarHeight: cubit.currentIndex == 0 ? 55 : 80,
               title: Column(
@@ -67,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                         const Expanded(child: TaskSearchTextField()),
                       if (cubit.currentIndex == 2)
                         Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Colors.deepPurple[300],
                               borderRadius: BorderRadius.circular(30),
@@ -82,14 +81,14 @@ class HomeScreen extends StatelessWidget {
                   if (cubit.currentIndex == 2)
                     Text(
                         "${cubit.datedTasks.length} tasks in ${TimeDateModel.getWeekday(cubit.days[cubit.selectedDateIndex])}, ${cubit.days[cubit.selectedDateIndex].day}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                 ],
               ),
               titleSpacing: 10,
             ),
             body: screens[cubit.currentIndex],
-            floatingActionButton: CustomDockedButton(),
+            floatingActionButton: const CustomDockedButton(),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           );

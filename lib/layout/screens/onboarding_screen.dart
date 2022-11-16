@@ -57,7 +57,7 @@ class OnBoardingScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: 65,
                   child: Row(
@@ -99,7 +99,7 @@ class OnBoardingScreen extends StatelessWidget {
                             );
                           } else {
                             controller.nextPage(
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 curve: Curves.bounceInOut);
                           }
                         },
@@ -107,7 +107,7 @@ class OnBoardingScreen extends StatelessWidget {
                           cubit.currentIndex != models.length - 1
                               ? "NEXT"
                               : "FINISH",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
