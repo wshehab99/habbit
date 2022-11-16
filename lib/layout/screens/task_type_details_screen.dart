@@ -58,6 +58,9 @@ class TaskTypeDetailsScreen extends StatelessWidget {
                                 cubit.getTypedTasks(
                                   type: taskTypeModel!.name!,
                                 );
+                                cubit.getTodayTasks();
+                                cubit.getStatusBasedTasks(status: "ongoing");
+                                cubit.getDoneTasks();
                               });
                             },
                             icon: const Icon(Icons.add),

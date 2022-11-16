@@ -54,6 +54,8 @@ class CalendarScreen extends StatelessWidget {
                               cubit.getDatedTasks(
                                 date: cubit.days[cubit.selectedDateIndex],
                               );
+                              cubit.getTodayTasks();
+                              cubit.getStatusBasedTasks(status: "ongoing");
                             });
                           },
                           taskModel: cubit.datedTasks[index],

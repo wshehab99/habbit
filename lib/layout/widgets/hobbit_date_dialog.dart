@@ -14,6 +14,9 @@ class HobbitDateDialog {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Colors.deepPurple.shade300,
+              ),
               dialogTheme: DialogTheme(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(35)))),

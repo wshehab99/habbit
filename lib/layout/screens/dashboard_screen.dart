@@ -145,6 +145,8 @@ class DashBoardScreen extends StatelessWidget {
                             }).then((value) {
                           cubit.getDoneTasks();
                           cubit.getStatusBasedTasks(status: "ongoing");
+                          cubit.getDatedTasks(date: DateTime.now());
+                          cubit.getTodayTasks();
                         });
                       },
                     );

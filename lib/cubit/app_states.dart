@@ -29,3 +29,5 @@ class GetDatedTasksState extends AppState {}
 class LoadingState extends AppState {}
 
 class DeleteTaskState extends AppState {}
+
+class GetTodayTasksState extends AppState {}

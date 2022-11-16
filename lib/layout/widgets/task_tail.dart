@@ -25,6 +25,11 @@ class TaskTail extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black12,
+          width: 0.2,
+          strokeAlign: 0.5,
+        ),
         borderRadius: BorderRadius.circular(20),
         color: Colors.white,
       ),
