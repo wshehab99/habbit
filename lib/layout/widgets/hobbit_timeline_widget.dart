@@ -22,8 +22,7 @@ class HobbitTimeLineWidget extends StatelessWidget {
       return SizedBox(
         height: 120,
         child: ScrollablePositionedList.separated(
-          physics: const BouncingScrollPhysics(
-              decelerationRate: ScrollDecelerationRate.fast),
+          physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           itemPositionsListener: itemPositionsListener,
           itemScrollController: itemScrollController,

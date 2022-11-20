@@ -38,7 +38,7 @@ class SearchScreen extends StatelessWidget {
                       child: TaskSearchTextField(
                         controller: controller,
                         searchMethod: (value) {
-                          cubit.searchTask(value: value);
+                          cubit.searchTask(search: value);
                         },
                         isSearch: true,
                       ),
