@@ -59,10 +59,11 @@ class DataBaseHelper {
   }
 
   static Future<List<Map<String, dynamic>>> searchAboutTasks({
-    required String value,
+    required value,
   }) async {
-    return database!.rawQuery(
-        "SELECT * FROM tasks WHERE name OR description LIKE ?", ["%$value%"]);
+    return await database!.rawQuery(
+      "SELECT * FROM tasks WHERE name LIKE '%$value%'",
+    );
   }
 
   static countTasksBasedOnCondition({

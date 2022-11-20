@@ -120,15 +120,6 @@ class AppCubit extends Cubit<AppState> {
   }
 
   List<TaskModel> searchedTasks = [];
-  void searchTask({required String value}) async {
-    searchedTasks = [];
-    DataBaseHelper.searchAboutTasks(value: value).then((value) {
-      value.forEach((element) {
-        searchedTasks.add(TaskModel.fromMap(map: element));
-      });
-      emit(SearchState());
-    });
-  }
 
   List<TaskModel> datedTasks = [];
   void getDatedTasks({required DateTime date}) async {
@@ -154,6 +145,20 @@ class AppCubit extends Cubit<AppState> {
   Future<void> deleteTask({required int id}) async {
     DataBaseHelper.deleteTask(id).then((value) {
       emit(DeleteTaskState());
+    });
+  }
+
+  void searchTask({
+    required String search,
+  }) {
+    searchedTasks.clear();
+    DataBaseHelper.searchAboutTasks(
+      value: search,
+    ).then((value) {
+      value.forEach((element) {
+        searchedTasks.add(TaskModel.fromMap(map: element));
+      });
+      emit(SearchState());
     });
   }
 

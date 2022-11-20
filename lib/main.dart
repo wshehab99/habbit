@@ -19,19 +19,8 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       debugShowCheckedModeBanner: false,
       home: Builder(builder: (context) {
-        ResponsiveApp.setMq(context);
         return OnBoardingScreen();
       }),
     );
-  }
-}
-
-class ResponsiveApp {
-  static MediaQueryData? _mediaQueryData;
-
-  MediaQueryData get mq => _mediaQueryData!;
-
-  static void setMq(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
   }
 }
